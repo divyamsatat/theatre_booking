@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class Theatre(Document):
+class Screen(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -13,9 +13,11 @@ class Theatre(Document):
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
+		from theatre_booking.theatre_booking.doctype.seat.seat import Seat
 
-		location: DF.Data | None
-		theatre_name: DF.Data
+		screen_name: DF.Data
+		seats: DF.Table[Seat]
+		theatre: DF.Link
 	# end: auto-generated types
 
-	_DOCTYPE_NAME = "Theatre"
+	_DOCTYPE_NAME = "Screen"

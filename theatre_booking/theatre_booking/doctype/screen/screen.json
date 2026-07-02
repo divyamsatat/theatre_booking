@@ -2,37 +2,47 @@
  "actions": [],
  "allow_bulk_edit": 1,
  "allow_rename": 1,
- "autoname": "field:theatre_name",
- "creation": "2026-07-02 11:08:00.377761",
+ "autoname": "SCR-.####",
+ "creation": "2026-07-02 11:54:54.748597",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "theatre_name",
-  "location"
+  "screen_name",
+  "theatre",
+  "seats"
  ],
  "fields": [
   {
-   "fieldname": "theatre_name",
+   "fieldname": "screen_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Theatre Name",
-   "reqd": 1,
-   "unique": 1
+   "label": "Screen Name",
+   "reqd": 1
   },
   {
-   "fieldname": "location",
-   "fieldtype": "Data",
-   "label": "Location"
+   "fieldname": "theatre",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Theatre",
+   "options": "Theatre",
+   "reqd": 1
+  },
+  {
+   "fieldname": "seats",
+   "fieldtype": "Table",
+   "label": "Seats",
+   "options": "Seat",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-02 11:45:46.036757",
+ "modified": "2026-07-02 12:10:03.030749",
  "modified_by": "Administrator",
  "module": "Theatre Booking",
- "name": "Theatre",
- "naming_rule": "By fieldname",
+ "name": "Screen",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -52,6 +62,5 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
- "title_field": "theatre_name"
+ "states": []
 }
