@@ -30,7 +30,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Seat Type",
-   "options": "Regular/Premium",
+   "options": "Regular\nPremium",
    "reqd": 1
   }
  ],
