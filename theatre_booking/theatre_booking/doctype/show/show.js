@@ -53,6 +53,20 @@ frappe.ui.form.on("Show", {
 					}
 				);
 			});
+
+			frm.add_custom_button("Add Notes", () => {
+				frappe.prompt(
+					{ fieldname: "notes", label: "Notes", fieldtype: "Small Text", reqd: 1 },
+					(values) => {
+						frappe.show_alert({
+							message: `Note saved: ${values.notes}`,
+							indicator: "green"
+						}, 3);
+					},
+					"Add Notes",
+					"Save Note"
+				);
+			});
 		}
 	},
 
