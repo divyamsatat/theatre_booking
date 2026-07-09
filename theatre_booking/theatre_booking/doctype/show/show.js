@@ -67,6 +67,29 @@ frappe.ui.form.on("Show", {
 					"Save Note"
 				);
 			});
+
+			// ----------------------------------------------------------------
+			// Book Seats button → frappe.ui.Dialog (Concept 5)
+			// ----------------------------------------------------------------
+			frm.add_custom_button("Book Seats", () => {
+				const d = new frappe.ui.Dialog({
+					title: "Book Seats",
+					fields: [
+						{ label: "Customer Name", fieldname: "customer_name", fieldtype: "Data", reqd: 1 },
+						{ label: "Number of Seats", fieldname: "num_seats", fieldtype: "Int", reqd: 1 },
+						{ label: "Seat Type", fieldname: "seat_type", fieldtype: "Select", options: "Regular\nPremium\nVIP" }
+					],
+					primary_action_label: "Confirm Booking",
+					primary_action(values) {
+						frappe.show_alert({
+							message: `Booked ${values.num_seats} ${values.seat_type} seat(s) for ${values.customer_name}`,
+							indicator: "green"
+						}, 5);
+						d.hide();
+					}
+				});
+				d.show();
+			});
 		}
 	},
 
@@ -85,3 +108,4 @@ frappe.ui.form.on("Show", {
 		frm.trigger("apply_screen_filter");
 	}
 });
+
