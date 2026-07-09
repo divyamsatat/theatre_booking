@@ -31,6 +31,29 @@ frappe.ui.form.on("Show", {
 	// ----------------------------------------------------------------
 	refresh(frm) {
 		frm.trigger("apply_screen_filter");
+		if (!frm.is_new()) {
+			frappe.show_alert("Show loaded successfully");
+
+			frm.add_custom_button("Cancel Show", () => {
+				frappe.confirm(
+					"Are you sure you want to cancel this show?",
+					() => {
+						// YES clicked
+						frappe.show_alert({
+							message: "Show has been cancelled!",
+							indicator: "red"
+						}, 3);
+					},
+					() => {
+						// NO clicked
+						frappe.show_alert({
+							message: "Cancelled. Show is still active.",
+							indicator: "green"
+						}, 3);
+					}
+				);
+			});
+		}
 	},
 
 	// ----------------------------------------------------------------
