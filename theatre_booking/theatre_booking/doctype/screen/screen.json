@@ -9,6 +9,10 @@
  "field_order": [
   "screen_name",
   "theatre",
+  "total_seats",
+  "section_row_config",
+  "row_config",
+  "section_seats",
   "seats"
  ],
  "fields": [
@@ -28,11 +32,37 @@
    "reqd": 1
   },
   {
+   "fieldname": "total_seats",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Total Seats",
+   "read_only": 1,
+   "description": "Auto-calculated from row configuration"
+  },
+  {
+   "fieldname": "section_row_config",
+   "fieldtype": "Section Break",
+   "label": "Row Configuration"
+  },
+  {
+   "fieldname": "row_config",
+   "fieldtype": "Table",
+   "label": "Row Configuration",
+   "options": "Screen Row Config",
+   "description": "Define each row: label, number of seats, and seat type. Then click 'Generate Seats'."
+  },
+  {
+   "fieldname": "section_seats",
+   "fieldtype": "Section Break",
+   "label": "Generated Seats"
+  },
+  {
    "fieldname": "seats",
    "fieldtype": "Table",
    "label": "Seats",
    "options": "Seat",
-   "reqd": 1
+   "read_only": 1,
+   "description": "Auto-populated by clicking 'Generate Seats'. Do not edit manually."
   }
  ],
  "grid_page_length": 50,

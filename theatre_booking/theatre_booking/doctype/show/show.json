@@ -11,7 +11,12 @@
   "theatre",
   "screen",
   "show_date",
-  "show_time"
+  "show_time",
+  "col_break_1",
+  "regular_seat_price",
+  "premium_seat_price",
+  "section_break_1",
+  "status"
  ],
  "fields": [
   {
@@ -49,6 +54,37 @@
    "fieldname": "show_time",
    "fieldtype": "Time",
    "label": "Show Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "regular_seat_price",
+   "fieldtype": "Currency",
+   "in_list_view": 0,
+   "label": "Regular Seat Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "premium_seat_price",
+   "fieldtype": "Currency",
+   "in_list_view": 0,
+   "label": "Premium Seat Price",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nCancelled\nHouseful",
+   "default": "Active",
    "reqd": 1
   }
  ],
