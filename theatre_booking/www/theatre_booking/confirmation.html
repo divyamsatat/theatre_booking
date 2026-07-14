@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Booking Confirmed — CinéBook</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #08080f; --bg-card: #12121e;
+      --accent: #e94560; --accent2: #f5a623;
+      --green: #0fd9a0;
+      --text: #f0f0ff; --text-muted: #7a7a9a;
+      --border: rgba(255,255,255,0.07);
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav {
+      background: rgba(8,8,15,0.9); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem; display: flex; align-items: center; height: 64px;
+    }
+    .logo { font-size: 1.3rem; font-weight: 800; background: linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-decoration: none; }
+
+    .page { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
+
+    /* SUCCESS ANIMATION */
+    .success-icon {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), #0a8060);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; margin: 0 auto 1.5rem;
+      box-shadow: 0 0 60px rgba(15,217,160,0.35);
+      animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+    h1 { font-size: 1.8rem; font-weight: 800; text-align: center; margin-bottom: 0.4rem; }
+    .sub { color: var(--text-muted); text-align: center; margin-bottom: 2.5rem; }
+
+    /* BOOKING CARD */
+    .booking-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 2rem; width: 100%; max-width: 480px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+    }
+
+    .bkn-id {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(15,217,160,0.1); border: 1px solid rgba(15,217,160,0.25);
+      border-radius: 100px; padding: 0.35rem 1rem;
+      font-size: 0.85rem; font-weight: 700; color: var(--green);
+      margin-bottom: 1.5rem;
+    }
+
+    .detail-grid { display: flex; flex-direction: column; gap: 0; }
+    .detail-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.9rem 0; border-bottom: 1px solid var(--border);
+    }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-key { font-size: 0.78rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .detail-val { font-size: 0.92rem; font-weight: 600; text-align: right; }
+    .detail-val.amount { font-size: 1.2rem; font-weight: 800; color: var(--accent2); }
+    .status-badge {
+      background: rgba(15,217,160,0.12); color: var(--green);
+      border: 1px solid rgba(15,217,160,0.25);
+      border-radius: 100px; padding: 0.2rem 0.75rem; font-size: 0.78rem; font-weight: 700;
+    }
+
+    .actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; }
+    .btn-primary {
+      flex: 1; padding: 0.85rem;
+      background: linear-gradient(135deg, var(--accent), #c0263f);
+      color: #fff; border: none; border-radius: 12px;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      text-align: center; text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary {
+      flex: 1; padding: 0.85rem;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--border);
+      color: var(--text); border-radius: 12px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      text-align: center; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+    footer { border-top: 1px solid var(--border); text-align: center; padding: 1.5rem; color: var(--text-muted); font-size: 0.8rem; }
+
+    @media print {
+      nav, .actions, footer { display: none; }
+      body { background: #fff; color: #000; }
+      .booking-card { border: 1px solid #ccc; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/theatre_booking">🎬 CinéBook</a>
+</nav>
+
+<div class="page">
+  <div class="success-icon">✓</div>
+  <h1>Booking Confirmed!</h1>
+  <p class="sub">Your seats are reserved. Enjoy the movie!</p>
+
+  <div class="booking-card">
+    <div class="bkn-id">🎟 {{ booking.name }}</div>
+
+    <div class="detail-grid">
+      <div class="detail-row">
+        <span class="detail-key">Movie</span>
+        <span class="detail-val">{{ booking.movie or show.movie }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Theatre</span>
+        <span class="detail-val">{{ booking.theatre or show.theatre }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Show Date</span>
+        <span class="detail-val">{{ booking.show_date or show.show_date }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Show Time</span>
+        <span class="detail-val">{{ (booking.show_time or show.show_time)[:5] }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Customer</span>
+        <span class="detail-val">{{ booking.customer_name }}</span>
+      </div>
+      {% if booking.customer_email %}
+      <div class="detail-row">
+        <span class="detail-key">Email</span>
+        <span class="detail-val">{{ booking.customer_email }}</span>
+      </div>
+      {% endif %}
+      <div class="detail-row">
+        <span class="detail-key">Seats</span>
+        <span class="detail-val">{{ booking.num_seats }} × {{ booking.seat_type }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Total Paid</span>
+        <span class="detail-val amount">₹{{ booking.total_amount | int }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-key">Status</span>
+        <span class="detail-val"><span class="status-badge">✓ {{ booking.status }}</span></span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary" onclick="window.print()">🖨 Print</button>
+      <a class="btn-primary" href="/theatre_booking">← Back to Movies</a>
+    </div>
+  </div>
+</div>
+
+<footer>© 2026 CinéBook &mdash; Theatre Booking System</footer>
+
+</body>
+</html>
