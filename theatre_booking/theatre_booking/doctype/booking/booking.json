@@ -7,8 +7,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "show",
   "movie",
+  "show",
   "theatre",
   "show_date",
   "show_time",
@@ -26,20 +26,22 @@
  ],
  "fields": [
   {
+   "fieldname": "movie",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Movie",
+   "options": "Movie",
+   "reqd": 1,
+   "description": "Select a movie first — available shows will be filtered accordingly"
+  },
+  {
    "fieldname": "show",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Show",
+   "label": "Show (Date & Time)",
    "options": "Show",
-   "reqd": 1
-  },
-  {
-   "fieldname": "movie",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Movie",
-   "fetch_from": "show.movie",
-   "read_only": 1
+   "reqd": 1,
+   "description": "Shows are filtered based on the selected movie"
   },
   {
    "fieldname": "theatre",
@@ -137,7 +139,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-14 10:30:00.000000",
+ "modified": "2026-07-14 11:00:00.000000",
  "modified_by": "Administrator",
  "module": "Theatre Booking",
  "name": "Booking",

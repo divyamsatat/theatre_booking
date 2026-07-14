@@ -20,6 +20,7 @@ class Booking(Document):
 		customer_email: DF.Data | None
 		customer_name: DF.Data
 		customer_phone: DF.Data | None
+		movie: DF.Link | None
 		num_seats: DF.Int
 		seat_type: DF.Literal["Regular", "Premium"]
 		show: DF.Link
@@ -34,6 +35,7 @@ class Booking(Document):
 
 	def validate(self):
 		"""Validate that enough seats are available for this show + seat type."""
+		self._sync_movie_from_show()
 		self._validate_num_seats()
 		self._check_seat_availability()
 
@@ -44,6 +46,13 @@ class Booking(Document):
 	# ----------------------------------------------------------------
 	# Private helpers
 	# ----------------------------------------------------------------
+
+	def _sync_movie_from_show(self):
+		"""Keep the movie field consistent with the linked show (server-side guard)."""
+		if self.show:
+			show_movie = frappe.db.get_value("Show", self.show, "movie")
+			if show_movie:
+				self.movie = show_movie
 
 	def _validate_num_seats(self):
 		if not self.num_seats or self.num_seats < 1:
