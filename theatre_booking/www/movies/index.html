@@ -100,7 +100,7 @@
 
 <nav>
   <div>
-    <a class="logo" href="/theatre_booking">🎬 CinéBook</a>
+    <a class="logo" href="/movies">🎬 CinéBook</a>
     <div class="nav-subtitle">Your Cinema, Your Way</div>
   </div>
 </nav>
@@ -179,7 +179,7 @@
       const showCount = movie.show_count || 0;
       const encodedName = encodeURIComponent(movie.name);
       return `
-        <a class="movie-card" href="/theatre_booking/shows?movie=${encodedName}">
+        <a class="movie-card" href="/movies/shows?movie=${encodedName}">
           <div class="movie-poster" style="background:${g}">
             <span class="genre-icon">${icon}</span>
             <span class="show-badge">🎬 ${showCount} show${showCount !== 1 ? 's' : ''}</span>
