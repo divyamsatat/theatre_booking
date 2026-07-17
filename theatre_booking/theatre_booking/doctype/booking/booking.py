@@ -1,6 +1,7 @@
 # Copyright (c) 2026, Divyam Jain and contributors
 # For license information, please see license.txt
 
+# pyrefly: ignore [missing-import]
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -29,8 +30,9 @@ class Booking(Document):
 	# end: auto-generated types
 
 	def before_insert(self):
-		"""Auto-set status to Confirmed and booking_date on new bookings."""
-		self.status = "Confirmed"
+		"""Auto-set booking_date on new bookings."""
+		if not self.status:
+			self.status = "Pending Payment"
 		self.booking_date = now_datetime()
 
 	def validate(self):
@@ -38,10 +40,10 @@ class Booking(Document):
 		self._sync_movie_from_show()
 		self._validate_num_seats()
 		self._check_seat_availability()
+		self._calculate_total_amount()
 
 	def before_save(self):
-		"""Auto-calculate total_amount based on configurable prices on the Show."""
-		self._calculate_total_amount()
+		pass
 
 	# ----------------------------------------------------------------
 	# Private helpers

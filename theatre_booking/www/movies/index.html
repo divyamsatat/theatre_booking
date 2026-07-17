@@ -135,6 +135,7 @@
 <footer>© 2026 CinéBook — Theatre Booking System</footer>
 
 <script>
+  window.csrf_token = "{{ csrf_token }}";
   const GRADIENTS = [
     'linear-gradient(135deg,#e94560,#9b2335)',
     'linear-gradient(135deg,#7b2ff7,#3a0ca3)',
@@ -202,7 +203,7 @@
   async function loadMovies() {
     try {
       const res = await fetch('/api/method/theatre_booking.api.get_movies', {
-        headers: { 'X-Frappe-CSRF-Token': 'fetch' }
+        headers: { 'X-Frappe-CSRF-Token': window.csrf_token }
       });
       const data = await res.json();
       renderMovies(data.message || []);

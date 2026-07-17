@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-07-17 16:21:38.345787",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "razorpay_key_id",
+  "razorpay_key_secret",
+  "razorpay_webhook_secret"
+ ],
+ "fields": [
+  {
+   "fieldname": "razorpay_key_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Razorpay Key ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "razorpay_key_secret",
+   "fieldtype": "Password",
+   "in_list_view": 1,
+   "label": "Razorpay Key Secret",
+   "reqd": 1
+  },
+  {
+   "fieldname": "razorpay_webhook_secret",
+   "fieldtype": "Password",
+   "in_list_view": 1,
+   "label": "Razorpay Webhook Secret"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-17 16:22:52.008333",
+ "modified_by": "Administrator",
+ "module": "Theatre Booking",
+ "name": "Theater Booking Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -104,8 +104,8 @@ def _get_availability(show_name):
 # ----------------------------------------------------------------
 
 @frappe.whitelist(allow_guest=True)
-def create_booking(show: str, customer_name: str, num_seats: int | str, seat_type: str,
-				   customer_email: str | None = None, customer_phone: str | None = None):
+def create_booking(show: str, customer_name: str, num_seats: int, seat_type: str,
+				   customer_email: str = "", customer_phone: str = ""):
 	"""
 	Creates a Booking from the public booking modal.
 	Returns the new Booking name on success.
@@ -124,9 +124,127 @@ def create_booking(show: str, customer_name: str, num_seats: int | str, seat_typ
 	})
 
 	booking.insert(ignore_permissions=True)
+
+	# Fetch keys and create Razorpay Order
+	settings_name = frappe.db.get_value("Theater Booking Settings", filters={}, fieldname="name")
+	if not settings_name:
+		frappe.throw(_("Payment gateway is not configured on the server."))
+	settings = frappe.get_doc("Theater Booking Settings", settings_name)
+	
+	if not settings.razorpay_key_id or not settings.razorpay_key_secret:
+		frappe.throw(_("Payment gateway is not configured on the server."))
+
+	import razorpay
+	client = razorpay.Client(auth=(settings.razorpay_key_id, settings.get_password("razorpay_key_secret")))
+	
+	amount_in_paise = int(booking.total_amount * 100)
+	
+	order = client.order.create({
+		"amount": amount_in_paise,
+		"currency": "INR",
+		"receipt": booking.name
+	})
+
+	# Save the order ID back to the booking
+	booking.db_set("razorpay_order_id", order["id"])
+	frappe.db.commit()
+
+	return {
+		"booking_id": booking.name,
+		"razorpay_order_id": order["id"],
+		"amount": amount_in_paise,
+		"key_id": settings.razorpay_key_id,
+		"customer_name": booking.customer_name,
+		"customer_email": booking.customer_email,
+		"customer_phone": booking.customer_phone
+	}
+
+
+@frappe.whitelist(allow_guest=True)
+def verify_payment(razorpay_payment_id: str, razorpay_order_id: str, razorpay_signature: str, booking_name: str):
+	settings_name = frappe.db.get_value("Theater Booking Settings", filters={}, fieldname="name")
+	settings = frappe.get_doc("Theater Booking Settings", settings_name)
+	import razorpay
+	client = razorpay.Client(auth=(settings.razorpay_key_id, settings.get_password("razorpay_key_secret")))
+	
+	try:
+		client.utility.verify_payment_signature({
+			'razorpay_order_id': razorpay_order_id,
+			'razorpay_payment_id': razorpay_payment_id,
+			'razorpay_signature': razorpay_signature
+		})
+	except Exception as e:
+		frappe.throw(_("Payment verification failed: {0}").format(str(e)))
+
+	booking = frappe.get_doc("Booking", booking_name)
+	if booking.razorpay_order_id != razorpay_order_id:
+		frappe.throw(_("Order ID mismatch for this booking."))
+
+	# Successfully paid -> Confirm booking
+	booking.status = "Confirmed"
+	booking.save(ignore_permissions=True)
 	frappe.db.commit()
 
 	return booking.name
+
+
+@frappe.whitelist(allow_guest=True)
+def razorpay_webhook():
+	"""
+	Webhook endpoint for Razorpay.
+	Receives events like payment.captured and order.paid.
+	"""
+	raw_body = frappe.request.get_data()
+	signature = frappe.request.headers.get("X-Razorpay-Signature")
+
+	if not signature:
+		frappe.throw(_("Missing Razorpay signature"), exc=frappe.PermissionError)
+
+	settings_name = frappe.db.get_value("Theater Booking Settings", filters={}, fieldname="name")
+	settings = frappe.get_doc("Theater Booking Settings", settings_name)
+	if not settings.razorpay_webhook_secret:
+		frappe.throw(_("Webhook secret is not configured"))
+
+	import razorpay
+	import json
+	client = razorpay.Client(auth=(settings.razorpay_key_id, settings.get_password("razorpay_key_secret")))
+
+	try:
+		webhook_secret = settings.get_password("razorpay_webhook_secret")
+		client.utility.verify_webhook_signature(
+			raw_body.decode('utf-8') if isinstance(raw_body, bytes) else raw_body, 
+			signature, 
+			webhook_secret
+		)
+	except Exception as e:
+		frappe.throw(_("Webhook signature verification failed: {0}").format(str(e)), exc=frappe.PermissionError)
+
+	# Signature is valid. Parse payload
+	payload = json.loads(raw_body)
+	event = payload.get("event")
+
+	if event in ["payment.captured", "order.paid"]:
+		# Get Razorpay order ID from payload
+		if event == "payment.captured":
+			payment_entity = payload.get("payload", {}).get("payment", {}).get("entity", {})
+			rzp_order_id = payment_entity.get("order_id")
+		else:
+			order_entity = payload.get("payload", {}).get("order", {}).get("entity", {})
+			rzp_order_id = order_entity.get("id")
+
+		if not rzp_order_id:
+			return "OK"  # No order ID to process
+
+		# Find the corresponding Booking
+		booking_name = frappe.db.get_value("Booking", {"razorpay_order_id": rzp_order_id}, "name")
+		if booking_name:
+			booking = frappe.get_doc("Booking", booking_name)
+			if booking.status != "Confirmed":
+				booking.status = "Confirmed"
+				booking.save(ignore_permissions=True)
+				frappe.db.commit()
+
+	return "OK"
 
 
 # ----------------------------------------------------------------
