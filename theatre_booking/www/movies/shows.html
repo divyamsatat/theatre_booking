@@ -583,9 +583,9 @@
 <body>
 
   <nav>
-    <a class="back-btn" href="/theatre_booking">← Back</a>
+    <a class="back-btn" href="/movies">← Back</a>
     <span style="color:var(--border)">|</span>
-    <a class="logo" href="/theatre_booking">🎬 CinéBook</a>
+    <a class="logo" href="/movies">🎬 CinéBook</a>
   </nav>
 
   <div id="movieHero" class="movie-hero">
@@ -673,10 +673,10 @@
     }
 
     async function loadShows() {
-      if (!movie) { window.location.href = '/theatre_booking'; return; }
+      if (!movie) { window.location.href = '/movies'; return; }
 
       // Load movie info
-      const moviesRes = await fetch('/api/method/theatre_booking.api.get_movies', { headers: { 'X-Frappe-CSRF-Token': window.csrf_token } });
+      const moviesRes = await fetch('/api/method/movies.api.get_movies', { headers: { 'X-Frappe-CSRF-Token': window.csrf_token } });
       const moviesData = await moviesRes.json();
       const movies = moviesData.message || [];
       const movieObj = movies.find(m => m.name === movie);
@@ -691,7 +691,7 @@
       }
 
       // Load shows
-      const showsRes = await fetch(`/api/method/theatre_booking.api.get_shows_for_movie?movie=${encodeURIComponent(movie)}`, { headers: { 'X-Frappe-CSRF-Token': window.csrf_token } });
+      const showsRes = await fetch(`/api/method/movies.api.get_shows_for_movie?movie=${encodeURIComponent(movie)}`, { headers: { 'X-Frappe-CSRF-Token': window.csrf_token } });
       const showsData = await showsRes.json();
       const shows = showsData.message || [];
 
@@ -703,7 +703,7 @@
           <div class="empty-icon">🎭</div>
           <h3>No shows available</h3>
           <p>There are no active shows for this movie right now.</p>
-          <br/><a href="/theatre_booking" style="color:var(--accent)">← Browse other movies</a>
+          <br/><a href="/movies" style="color:var(--accent)">← Browse other movies</a>
         </div>`;
         return;
       }
@@ -819,7 +819,7 @@
       btn.disabled = true; btn.textContent = 'Processing…';
 
       try {
-        const res = await fetch('/api/method/theatre_booking.api.create_booking', {
+        const res = await fetch('/api/method/movies.api.create_booking', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'X-Frappe-CSRF-Token': frappe.csrf_token || window.csrf_token },
           body: JSON.stringify({ show: currentShow.showName, customer_name: name, customer_email: email, customer_phone: phone, seat_type: selectedSeatType, num_seats: seats }),
@@ -838,7 +838,7 @@
             "handler": async function (response) {
               btn.textContent = 'Verifying Payment…';
               try {
-                const verifyRes = await fetch('/api/method/theatre_booking.api.verify_payment', {
+                const verifyRes = await fetch('/api/method/movies.api.verify_payment', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json', 'X-Frappe-CSRF-Token': frappe.csrf_token || window.csrf_token },
                   body: JSON.stringify({

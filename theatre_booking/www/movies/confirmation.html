@@ -102,7 +102,7 @@
 <body>
 
 <nav>
-  <a class="logo" href="/theatre_booking">🎬 CinéBook</a>
+  <a class="logo" href="/movies">🎬 CinéBook</a>
 </nav>
 
 <div class="page">
@@ -128,7 +128,7 @@
       </div>
       <div class="detail-row">
         <span class="detail-key">Show Time</span>
-        <span class="detail-val">{{ (booking.show_time or show.show_time)[:5] }}</span>
+        <span class="detail-val">{{ ((booking.show_time or show.show_time) | string)[:5] }}</span>
       </div>
       <div class="detail-row">
         <span class="detail-key">Customer</span>
@@ -156,7 +156,7 @@
 
     <div class="actions">
       <button class="btn-secondary" onclick="window.print()">🖨 Print</button>
-      <a class="btn-primary" href="/theatre_booking">← Back to Movies</a>
+      <a class="btn-primary" href="/movies">← Back to Movies</a>
     </div>
   </div>
 </div>
